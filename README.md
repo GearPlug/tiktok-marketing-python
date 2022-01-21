@@ -14,9 +14,9 @@ pip install git+https://github.com/GearPlug/tiktok-marketing-python.git
 
 #### Client instantiation
 ```python
-from tiktok_marketing.api import TikTokClient
+from tiktok_marketing import TikTokClient
 
-client = TikTokClient(app_id='your_app_id', secret='your_secret')
+client = TikTokClient('your_app_id', 'your_secret')
 ```
 
 #### Get authorization url
