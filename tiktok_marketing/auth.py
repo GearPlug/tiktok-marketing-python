@@ -32,14 +32,13 @@ class Auth(Module):
 
         ## Returns
         - dict of shape:
-
         {
-            "message": "OK",
-            "code": 0,
-            "data": {"access_token": "xxxxxxxxxxxxx", "scope": [4], "advertiser_ids": [1234, 1234]},
-            "request_id": "2020042715295501023125104093250",
+            "access_token": "xxxxxxxxxxxxx",
+            "scope": [4],
+            "advertiser_ids": [1234, 1234],
         }
         """
+        
         authentication_url = self.client.build_url("oauth2/access_token/")
         authentication_data = self.client.build_authentication_data(auth_code)
         return self.client.post(authentication_url, authentication_data)
