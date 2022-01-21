@@ -5,6 +5,10 @@ from tiktok_marketing import exceptions
 
 
 class Client:
+    """
+    Requests library wrapper to perform calls to tiktok marketing api.
+    """
+
     API_URL = "https://business-api.tiktok.com/open_api/v1.2/"
     AUTHORIZATION_URL = "https://ads.tiktok.com/marketing_api/auth"
 
@@ -14,7 +18,35 @@ class Client:
         self.secret = secret
         self.access_token = access_token
 
-    def get_authorization_url(self, redirect_uri, state=None) -> str:
+    def set_access_token(self, access_token):
+        self.access_token = access_token
+
+    def get_access_token(self):
+        return self.access_token
+
+    def get(self, url: str, **kwargs):
+        return self.request("get", url, **kwargs)
+
+    def post(self, url: str, json: dict, **kwargs):
+        return self.request("post", url, json=json, **kwargs)
+
+    def put(self, url: str, json: dict, **kwargs):
+        return self.request("put", url, json=json, **kwargs)
+
+    def delete(self, url: str, **kwargs):
+        return self.request("delete", url, **kwargs)
+
+    def build_app_data(self) -> dict:
+        """This method returns the app_id and the secret as a dict."""
+        return dict(app_id=self.app_id, secret=self.secret)
+
+    def build_url(self, endpoint: str) -> str:
+        """
+        This method returns the full url for the given endpoint.
+        """
+        return urljoin(self.API_URL, endpoint.lstrip("/"))
+
+    def build_authorization_url(self, redirect_uri, state=None) -> str:
         """
         This method returns the oauth authorization url.
         https://ads.tiktok.com/marketing_api/docs?id=1701890912382977
@@ -36,51 +68,11 @@ class Client:
 
         return self.AUTHORIZATION_URL + "?" + urlencode(params)
 
-    def authenticate(self, auth_code) -> dict:
-        """
-        After authorization is complete an auth_code is given, use it to generate a long-lived access token.
-        https://ads.tiktok.com/marketing_api/docs?id=1701890914536450
-
-        ## Returns
-        - dict of shape:
-
-        {
-            "message": "OK",
-            "code": 0,
-            "data": {"access_token": "xxxxxxxxxxxxx", "scope": [4], "advertiser_ids": [1234, 1234]},
-            "request_id": "2020042715295501023125104093250",
-        }
-        """
-        authentication_url = self.build_url("oauth2/access_token/")
-        return self.post(
-            authentication_url,
-            json=dict(
-                app_id=self.app_id,
-                secret=self.secret,
-                auth_code=auth_code,
-            ),
-        )
-
-    def set_access_token(self, access_token):
-        self.access_token = access_token
-
-    def get(self, url: str, **kwargs):
-        return self.request("get", url, **kwargs)
-
-    def post(self, url: str, json: dict, **kwargs):
-        return self.request("post", url, json=json, **kwargs)
-
-    def put(self, url: str, json: dict, **kwargs):
-        return self.request("put", url, json=json, **kwargs)
-
-    def delete(self, url: str, **kwargs):
-        return self.request("delete", url, **kwargs)
-
-    def build_url(self, endpoint: str) -> str:
-        """
-        This method returns the full url for the given endpoint.
-        """
-        return urljoin(self.API_URL, endpoint.lstrip("/"))
+    def build_authentication_data(self, auth_code: str) -> dict:
+        """This method returns the needed data to obtain the access token."""
+        app_data = self.build_app_data()
+        app_data.update(auth_code=auth_code)
+        return app_data
 
     def request(self, method, url, **kwargs):
         headers = kwargs.pop("headers", {})
@@ -143,4 +135,7 @@ class Client:
                 else:
                     raise exceptions.UnknownError(error, rsp)
 
-            return rsp
+            if "data" in rsp and isinstance(rsp, dict):
+                return rsp["data"]
+            else:
+                return rsp
