@@ -2,6 +2,7 @@ from tiktok_marketing.client import Client
 from tiktok_marketing.auth import Auth
 from tiktok_marketing.ad_account import AdAccount
 from tiktok_marketing.leads import Leads
+from tiktok_marketing.pages import Pages
 from tiktok_marketing.user import User
 
 
@@ -17,6 +18,7 @@ class TikTokClient:
         self.auth = Auth(client)
         self.ad_account = AdAccount(client)
         self.leads = Leads(client)
+        self.pages = Pages(client)
         self.user = User(client)
         # TODO: Ads
         # TODO: Ad Comments
