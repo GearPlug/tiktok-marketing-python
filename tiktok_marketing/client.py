@@ -36,9 +36,13 @@ class Client:
     def delete(self, url: str, **kwargs):
         return self.request("delete", url, **kwargs)
 
-    def build_app_data(self) -> dict:
+    def build_app_data(self, include_access_token=False, **kwargs) -> dict:
         """This method returns the app_id and the secret as a dict."""
-        return dict(app_id=self.app_id, secret=self.secret)
+        data = dict(app_id=self.app_id, secret=self.secret, **kwargs)
+        if include_access_token:
+            data.update(access_token=self.access_token)
+
+        return data
 
     def build_url(self, endpoint: str) -> str:
         """
@@ -71,8 +75,7 @@ class Client:
 
     def build_authentication_data(self, auth_code: str) -> dict:
         """This method returns the needed data to obtain the access token."""
-        app_data = self.build_app_data()
-        app_data.update(auth_code=auth_code)
+        app_data = self.build_app_data(auth_code=auth_code)
         return app_data
 
     def request(self, method, url, **kwargs):
@@ -93,7 +96,7 @@ class Client:
         """
         headers = kwargs.pop("headers", {})
         params = kwargs.pop("params", {})
-        if self.access_token is not None:
+        if self.access_token is not None and "access_token" not in params:
             headers["Access-Token"] = self.access_token
 
         if method in ["post", "put"]:
