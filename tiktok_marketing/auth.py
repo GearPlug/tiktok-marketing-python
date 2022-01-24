@@ -9,6 +9,9 @@ class Auth(Module):
     def get_authorization_url(self, redirect_uri, state=None) -> str:
         """
         This method returns the oauth authorization url.
+
+        ## Reference
+
         https://ads.tiktok.com/marketing_api/docs?id=1701890912382977
 
         ## Parameters
@@ -24,6 +27,9 @@ class Auth(Module):
         """
         After authorization is complete a valid 10-minute auth_code is given.
         Use this method to generate a long-lived access token with the auth_code.
+        
+        ## Reference
+        
         https://ads.tiktok.com/marketing_api/docs?id=1701890914536450
 
         ## Parameters
@@ -38,7 +44,7 @@ class Auth(Module):
             "advertiser_ids": [1234, 1234],
         }
         """
-        
+
         authentication_url = self.client.build_url("oauth2/access_token/")
         authentication_data = self.client.build_authentication_data(auth_code)
         return self.client.post(authentication_url, authentication_data)

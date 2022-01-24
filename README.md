@@ -48,5 +48,8 @@ We are always grateful for any kind of contribution including but not limited to
 1. Fork it ( https://github.com/GearPlug/tiktok-marketing-python )
 2. Create your feature branch (git checkout -b my-new-feature)
 3. Commit your changes (git commit -am 'Adds my new feature')
+   - To add new modules create a file `<module_name>.py`
+   - create a class that extends `module.py::Module`
+   - Import and add the new module to `api.py::TikTokClient` and remove the todo comment
 4. Push to the branch (git push origin my-new-feature)
 5. Create a new Pull Request

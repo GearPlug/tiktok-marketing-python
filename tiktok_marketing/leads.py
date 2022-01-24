@@ -229,7 +229,8 @@ class Leads(Module):
         https://ads.tiktok.com/marketing_api/docs?id=1709486460752897
 
         ## Parameters
-
+        - subscription_id: number, required
+            - The subscription ID.
         """
         endpoint = self.client.build_url("subscription/unsubscribe/")
         data = self.client.build_app_data()

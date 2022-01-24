@@ -43,6 +43,7 @@ class Client:
     def build_url(self, endpoint: str) -> str:
         """
         This method returns the full url for the given endpoint.
+        All endpoints must be relative to API_URL.
         """
         return urljoin(self.API_URL, endpoint.lstrip("/"))
 
@@ -75,6 +76,21 @@ class Client:
         return app_data
 
     def request(self, method, url, **kwargs):
+        """
+        This method performs the requests to the API.
+        If access_token is set it will be added to the headers.
+        If method is post or put Content-Type: application/json will be added to the headers.
+
+        ## Parameters
+        - method: str
+            - The HTTP method to use.
+        - url: str
+            - can be any url but TikTok API endpoints are expected
+            - use build_url beforehand to get the endpoint full path.
+        - kwargs: dict
+            - any other parameters that can be passed to the requests library.
+            - keep allow_redirects=True
+        """
         headers = kwargs.pop("headers", {})
         params = kwargs.pop("params", {})
         if self.access_token is not None:
