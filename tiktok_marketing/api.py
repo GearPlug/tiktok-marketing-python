@@ -13,8 +13,8 @@ class TikTokClient:
     Modules reference: https://ads.tiktok.com/marketing_api/docs?id=1705600933769218
     """
 
-    def __init__(self, app_id: str, secret: str) -> None:
-        client = Client(app_id=app_id, secret=secret)
+    def __init__(self, app_id: str, secret: str, **kwargs) -> None:
+        client = Client(app_id=app_id, secret=secret, **kwargs)
         self.auth = Auth(client)
         self.ad_account = AdAccount(client)
         self.leads = Leads(client)

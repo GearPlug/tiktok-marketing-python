@@ -1,7 +1,7 @@
 import requests
 from urllib.parse import urljoin
 from urllib.parse import urlencode
-from tiktok_marketing import exceptions
+from tiktok_marketing.exceptions import ExceptionFactory
 
 
 class Client:
@@ -10,13 +10,22 @@ class Client:
     """
 
     API_URL = "https://business-api.tiktok.com/open_api/v1.2/"
+    SANDBOX_URL = "https://sandbox-ads.tiktok.com/open_api/v1.2/"
     AUTHORIZATION_URL = "https://ads.tiktok.com/marketing_api/auth"
 
-    def __init__(self, app_id: str = None, secret: str = None, access_token: str = None):
+    def __init__(
+        self,
+        app_id: str = None,
+        secret: str = None,
+        access_token: str = None,
+        sandbox: bool = False,
+    ):
         """Initialize required parameters for API access."""
         self.app_id = app_id
         self.secret = secret
         self.access_token = access_token
+        self.sandbox = sandbox
+        self.exceptions = ExceptionFactory()
 
     def set_access_token(self, access_token):
         self.access_token = access_token
@@ -49,7 +58,8 @@ class Client:
         This method returns the full url for the given endpoint.
         All endpoints must be relative to API_URL.
         """
-        return urljoin(self.API_URL, endpoint.lstrip("/"))
+        base_url = self.API_URL if not self.sandbox else self.SANDBOX_URL
+        return urljoin(base_url, endpoint.lstrip("/"))
 
     def build_authorization_url(self, redirect_uri, state=None) -> str:
         """
@@ -122,39 +132,23 @@ class Client:
         try:
             status_code = response.status_code
             rsp = response.json()
+            tiktok_code = int(rsp.get("code", 0))
         except:
             rsp = response.text
         finally:
             if not response.ok:
-                error = None
+                message = None
                 if "error" in rsp:
-                    error = rsp["error"]
-                if status_code == 400:
-                    raise exceptions.BadRequestError(error, rsp)
-                elif status_code == 401:
-                    raise exceptions.UnauthorizedError(error, rsp)
-                elif status_code == 403:
-                    raise exceptions.ForbiddenError(error, rsp)
-                elif status_code == 404:
-                    raise exceptions.NotFoundError(error, rsp)
-                elif status_code == 410:
-                    raise exceptions.GoneError(error, rsp)
-                elif status_code == 415:
-                    raise exceptions.UnsupportedMediaTypeError(error, rsp)
-                elif status_code == 422:
-                    raise exceptions.UnprocessableEntityError(error, rsp)
-                elif status_code == 429:
-                    raise exceptions.TooManyRequestsError(error, rsp)
-                elif status_code == 500:
-                    raise exceptions.InternalServerError(error, rsp)
-                elif status_code == 501:
-                    raise exceptions.NotImplementedError(error, rsp)
-                elif status_code == 503:
-                    raise exceptions.ServiceUnavailableError(error, rsp)
-                else:
-                    raise exceptions.UnknownError(error, rsp)
+                    message = rsp["error"]
+
+                raise self.exceptions.get_exception(status_code, message, rsp)
+
+            if "code" in rsp and tiktok_code != 0:
+                message = rsp.get("message", None)
+                print(rsp)
+                raise self.exceptions.get_exception(tiktok_code, message, rsp)
 
             if "data" in rsp and isinstance(rsp, dict):
-                return rsp["data"]
+                return rsp.get("data", {})
             else:
                 return rsp
