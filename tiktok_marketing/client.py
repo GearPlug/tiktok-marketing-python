@@ -106,7 +106,7 @@ class Client:
         """
         headers = kwargs.pop("headers", {})
         params = kwargs.pop("params", {})
-        if self.access_token is not None and "access_token" not in params:
+        if self.access_token is not None or "access_token" in params:
             headers["Access-Token"] = self.access_token
 
         if method in ["post", "put"]:
