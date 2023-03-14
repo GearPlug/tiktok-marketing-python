@@ -9,8 +9,8 @@ class Client:
     Requests library wrapper to perform calls to tiktok marketing api.
     """
 
-    API_URL = "https://business-api.tiktok.com/open_api/v1.2/"
-    SANDBOX_URL = "https://sandbox-ads.tiktok.com/open_api/v1.2/"
+    API_URL = "https://business-api.tiktok.com/open_api/v1.3/"
+    SANDBOX_URL = "https://sandbox-ads.tiktok.com/open_api/v1.3/"
     AUTHORIZATION_URL = "https://ads.tiktok.com/marketing_api/auth"
 
     def __init__(
