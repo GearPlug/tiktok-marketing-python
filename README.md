@@ -1,4 +1,5 @@
 # tiktok-marketing-python
+![](https://img.shields.io/badge/version-1.0.1-success) ![](https://img.shields.io/badge/Python-3.8%20|%203.9%20|%203.10%20|%203.11-4B8BBE?logo=python&logoColor=white)
 
 Python developed library for [tiktok marketing api](https://ads.tiktok.com/marketing_api/docs)
 

@@ -8,7 +8,7 @@ def read(fname):
 
 setup(
     name="tiktok-marketing-python",
-    version="1.0.0",
+    version="1.0.1",
     description="Python developed library for TikTok Marketing API",
     long_description=read("README.md"),
     long_description_content_type="text/markdown",
