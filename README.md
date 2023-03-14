@@ -6,7 +6,7 @@ Python developed library for [tiktok marketing api](https://ads.tiktok.com/marke
 
 ## Installing
 ```
-pip install git+https://github.com/GearPlug/tiktok-marketing-python.git
+pip install tiktok-marketing-python
 ```
 
 ## Usage

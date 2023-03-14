@@ -204,8 +204,8 @@ class Leads(Module):
             raise ValueError("Either advertiser_id or library_id must be specified.")
 
         data.update(
-            object="LEAD",
-            url=callback_url,
+            subscribe_entity="LEAD",
+            callback_url=callback_url,
             subscription_detail=subscription_detail,
         )
 
