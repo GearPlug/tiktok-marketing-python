@@ -4,6 +4,7 @@ from tiktok_marketing.ad_account import AdAccount
 from tiktok_marketing.leads import Leads
 from tiktok_marketing.pages import Pages
 from tiktok_marketing.user import User
+from tiktok_marketing.business_center import BusinessCenter
 
 
 class TikTokClient:
@@ -20,12 +21,12 @@ class TikTokClient:
         self.leads = Leads(client)
         self.pages = Pages(client)
         self.user = User(client)
+        self.bc = BusinessCenter(client)
         # TODO: Ads
         # TODO: Ad Comments
         # TODO: Ad Groups
         # TODO: Audiences
         # TODO: Automated Rules
-        # TODO: Business Center
         # TODO: BC Partners
         # TODO: BC Members
         # TODO: Campaigns
